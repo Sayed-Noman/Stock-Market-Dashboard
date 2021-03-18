@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import yfinance as yf
 from dash.dependencies import Input,Output
+from dash.exceptions import PreventUpdate
 import pandas as pd
 
 
@@ -48,5 +49,26 @@ app.layout= html.Div([
     ], className='content')
 
 ], className = 'container')
+
+
+#Call Backs
+@app.callback(
+    [Output("ticker","children"),Output("logo","src"),Output("description", "children")],
+    [Input("Dropdown_Tickers", "value")],
+)
+
+def update_data(ticker_name):
+        if ticker_name == None:
+            raise PreventUpdate
+
+        ticker = yf.Ticker(ticker_name)
+        ticker_info = ticker.info
+
+        data_frame = pd.DataFrame().from_dict(ticker_info, orient="index").T
+        data_frame = data_frame[['logo_url','shortName','longBusinessSummary']]
+
+
+        return data_frame['shortName'].values[0],  data_frame['logo_url'].values[0], data_frame['longBusinessSummary'].values[0]
+
 
 app.run_server(debug = True)
