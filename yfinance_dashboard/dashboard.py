@@ -6,6 +6,17 @@ import yfinance as yf
 from dash.dependencies import Input,Output
 from dash.exceptions import PreventUpdate
 import pandas as pd
+import plotly.graph_objects as go
+
+
+def get_stock_price_fig(data_frame):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(mode = 'lines', x= data_frame['Date'], y= data_frame['Close']))
+    return fig
+
+
+
+
 
 
 app =dash.Dash()
@@ -70,5 +81,21 @@ def update_data(ticker_name):
 
         return data_frame['shortName'].values[0],  data_frame['logo_url'].values[0], data_frame['longBusinessSummary'].values[0]
 
+
+@app.callback(
+    [Output('graphs-content', 'children')],
+    [Input('stock','n_clicks'),Input('Dropdown_Tickers','value')],
+)
+
+def stock_price(no_time_clicks, ticker_name):
+    if no_time_clicks == None:
+        raise PreventUpdate
+    
+    data_frame = yf.download(ticker_name)
+    data_frame.reset_index(inplace = True)
+
+    graph_figure = get_stock_price_fig(data_frame)
+
+    return [dcc.Graph(figure = graph_figure)]
 
 app.run_server(debug = True)
