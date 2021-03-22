@@ -14,7 +14,12 @@ def get_stock_price_fig(data_frame):
     fig.add_trace(go.Scatter(mode = 'lines', x= data_frame['Date'], y= data_frame['Close']))
     return fig
 
-
+def get_dounuts_fig(data_frame, label):
+    non_main = 1 - data_frame.values[0]
+    labels = ['main', label]
+    values = [non_main, data_frame.values[0]]
+    fig = go.Figure(data = [go.Pie(labels=labels, values= values, hole=0.449)])
+    return fig
 
 
 
@@ -57,7 +62,7 @@ app.layout= html.Div([
             html.Div([], id ='graphs-content')
         ], id = 'main-content')
 
-    ], className='content')
+    ], className='content'),
 
 ], className = 'container')
 
@@ -97,5 +102,50 @@ def stock_price(no_time_clicks, ticker_name):
     graph_figure = get_stock_price_fig(data_frame)
 
     return [dcc.Graph(figure = graph_figure)]
+
+
+@app.callback(
+    [Output('main-content', 'children'),Output('stock','n_clicks')],
+    [Input('indicators', 'n_clicks'),Input('Dropdown_Tickers','value')]
+)
+def stock_price_indicator(no_time_clicks, ticker_name):
+    if no_time_clicks == None:
+        raise PreventUpdate
+    
+    ticker = yf.Ticker(ticker_name)
+    ###Ticker info is converted into dataframe and inverted into column from dictonary format
+    data_frame_info = pd.DataFrame.from_dict(ticker.info, orient='index').T
+    data_frame_info = data_frame_info[['priceToBook','profitMargins','bookValue','enterpriseToEbitda','shortRatio','beta','payoutRatio','regularMarketPreviousClose','country','sector','trailingEps']]
+    print(data_frame_info)
+    kpi_data = html.Div([
+        html.Div([
+                html.Div([
+                html.H4('Price to Book'),
+                html.P(data_frame_info['priceToBook'])
+            ]),
+            html.Div([
+                html.H4('Enterprise Data'),
+                html.P(data_frame_info['enterpriseToEbitda'])
+            ]),
+            html.Div([
+                html.H4('Country'),
+                html.P(data_frame_info['country'])
+            ]),
+            html.Div([
+                html.H4('Sector'),
+                html.P(data_frame_info['sector'])
+            ]),
+        ], className='kpi'),
+
+        html.Div([
+            dcc.Graph(figure = get_dounuts_fig(data_frame_info['profitMargins'],'Profit Margin')),
+            dcc.Graph(figure = get_dounuts_fig(data_frame_info['payoutRatio'],'Payout Ratio')),
+        ], className = 'dounuts')
+    ])
+    
+    return [html.Div([kpi_data], id = 'graphs-contents')], None
+    
+
+
 
 app.run_server(debug = True)
