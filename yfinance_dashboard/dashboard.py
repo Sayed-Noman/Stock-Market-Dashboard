@@ -3,7 +3,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import yfinance as yf
-from dash.dependencies import Input,Output
+from dash.dependencies import Input,Output,State
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.graph_objects as go
@@ -69,8 +69,8 @@ app.layout= html.Div([
 
 #Call Backs
 @app.callback(
-    [Output("ticker","children"),Output("logo","src"),Output("description", "children")],
-    [Input("Dropdown_Tickers", "value")],
+    [dash.dependencies.Output("ticker","children"),dash.dependencies.Output("logo","src"),dash.dependencies.Output("description", "children")],
+    [dash.dependencies.Input("Dropdown_Tickers", "value")],
 )
 
 def update_data(ticker_name):
@@ -88,8 +88,9 @@ def update_data(ticker_name):
 
 
 @app.callback(
-    [Output('graphs-content', 'children')],
-    [Input('stock','n_clicks'),Input('Dropdown_Tickers','value')],
+    [dash.dependencies.Output('graphs-content', 'children')],
+    [dash.dependencies.Input('stock','n_clicks'),dash.dependencies.Input('Dropdown_Tickers','value')],
+    
 )
 
 def stock_price(no_time_clicks, ticker_name):
@@ -108,8 +109,9 @@ def stock_price(no_time_clicks, ticker_name):
 
 
 @app.callback(
-    [Output('main-content', 'children'),Output('stock','n_clicks')],
-    [Input('indicators', 'n_clicks'),Input('Dropdown_Tickers','value')]
+    [dash.dependencies.Output('main-content', 'children'),dash.dependencies.Output('stock','n_clicks')],
+    [dash.dependencies.Input('indicators', 'n_clicks'),dash.dependencies.Input('Dropdown_Tickers','value')],
+    
 )
 def stock_price_indicator(no_time_clicks, ticker_name):
     if no_time_clicks == None:
