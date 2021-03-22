@@ -24,7 +24,7 @@ def get_dounuts_fig(data_frame, label):
 
 
 
-app =dash.Dash()
+app =dash.Dash(external_stylesheets = ["https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"])
 
 #main Div
 app.layout= html.Div([
@@ -96,6 +96,9 @@ def stock_price(no_time_clicks, ticker_name):
     if no_time_clicks == None:
         raise PreventUpdate
     
+    if ticker_name == None:
+        raise PreventUpdate
+    
     data_frame = yf.download(ticker_name)
     data_frame.reset_index(inplace = True)
 
@@ -110,6 +113,9 @@ def stock_price(no_time_clicks, ticker_name):
 )
 def stock_price_indicator(no_time_clicks, ticker_name):
     if no_time_clicks == None:
+        raise PreventUpdate
+    
+    if ticker_name == None:
         raise PreventUpdate
     
     ticker = yf.Ticker(ticker_name)
