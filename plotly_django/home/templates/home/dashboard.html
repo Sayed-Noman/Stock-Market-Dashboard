@@ -1,0 +1,9 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% load plotly_dash %}
+{% block content %}
+    <h2>Dashboard-- Stock Market</h2>
+     <div class="{% plotly_class name='stockDashboard' %} card" style="height: 100%; width: 100%;">
+        {% plotly_app name='stockDashboard' ratio=0.65 %}
+    </div>
+{% endblock content %}

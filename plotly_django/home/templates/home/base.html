@@ -1,0 +1,43 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={% static 'css/dashboard.css' %}>
+    <!------------------Jquery Latest Cdn Script--------------------------------->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!------------------Font Awesome Cdn Script--------------------------------->
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".hamburger").click(function(){
+                $(".wrapper").toggleClass("collapse");
+            });
+        });
+    </script>
+    <title>DashBoard</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!------------------NavigationBar--------------------------------->
+        {% include 'home/partials/_navbar.html' %}
+        <!------------------Side Admin Menu Bar--------------------------------->
+        {% include 'home/partials/_sidebar.html' %}
+        <!------------------Main Page Container Section--------------------------------->
+        <div class="main_container">
+            <div class="item">
+                {% block content %}{% endblock content %}
+            </div>
+            
+            <div class="item">
+                If you're getting the sense that the word topic is a bit too grand for a measly paragraph, then think of a paragraph as a distinct section of writing that covers one aspect of your topic. That's the point. Sometimes, a paragraph will be an aspect of a topic, sometimes it will be a topic within an issue, sometimes it will an issue within an argument…a narrative, a process, a comparison, whatever. Whatever the scope of your paragraph, it should be neatly bounded as one…well, topic. If you prefer aspect instead of topic, go with that. 
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
