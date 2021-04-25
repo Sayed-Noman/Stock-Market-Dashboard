@@ -101,6 +101,7 @@ def stock_price(no_time_clicks, ticker_name):
         raise PreventUpdate
     
     data_frame = yf.download(ticker_name)
+    #print(data_frame)
     data_frame.reset_index(inplace = True)
 
     graph_figure = get_stock_price_fig(data_frame)
@@ -124,7 +125,7 @@ def stock_price_indicator(no_time_clicks, ticker_name):
     ###Ticker info is converted into dataframe and inverted into column from dictonary format
     data_frame_info = pd.DataFrame.from_dict(ticker.info, orient='index').T
     data_frame_info = data_frame_info[['priceToBook','profitMargins','bookValue','enterpriseToEbitda','shortRatio','beta','payoutRatio','regularMarketPreviousClose','country','sector','trailingEps']]
-    print(data_frame_info)
+    #print(data_frame_info)
     kpi_data = html.Div([
         html.Div([
                 html.Div([
